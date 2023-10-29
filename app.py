@@ -37,7 +37,7 @@ ticker = st.selectbox(label='', options=['Apple Inc. (AAPL)','Microsoft Corporat
 if not (ticker is None):
     #String cleaning and read news
     string = ticker[-5:-1]
-    news = pd.read_csv(debug+string+'_news_yahoo.csv')
+    news = pd.read_csv('data/'+string+'_news_yahoo.csv')
     news = news.drop(news.columns[0], axis=1).iloc[:,[4,0,1,3,2]]
 
     #Output news
