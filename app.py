@@ -60,7 +60,7 @@ if not (ticker is None):
 
       # giving the start and end dates
       startDate = '2022-10-29'
-      endDate = today.strftime(format='%Y-%m-%d')
+      endDate = datetime.now().strftime(format='%Y-%m-%d')
 
       # downloading the data of the ticker value between
       # the start and end dates
