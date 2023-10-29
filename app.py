@@ -15,6 +15,7 @@ from bs4 import BeautifulSoup
 import time
 import plotly.express as px
 import yfinance as yf
+import datetime
 
 debug = 'C:/users/kj/Desktop/chengdu80-nus/data/'
 
