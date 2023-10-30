@@ -39,7 +39,8 @@ ticker = st.selectbox(label='', options=['Apple Inc. (AAPL)','Microsoft Corporat
 if not (ticker is None):
     #String cleaning and read news
     string = ticker[-5:-1]
-    news = pd.read_csv('data/'+string+'_news_yahoo.csv')
+    news = pd.read_csv(debug+string+'_news_yahoo.csv')
+    # news = pd.read_csv('data/'+string+'_news_yahoo.csv')
     news = news.drop(news.columns[0], axis=1).iloc[:,[4,0,1,3,2]]
 
     #Output news
@@ -55,6 +56,9 @@ if not (ticker is None):
 
     col1, col2 = st.columns(2)
     with col1:
+      #Want to compare to s&p?
+      compare = st.checkbox(label='Compare to S&P500')
+
       # importing the yfinance package
       import yfinance as yf
 
@@ -65,6 +69,31 @@ if not (ticker is None):
       # downloading the data of the ticker value between
       # the start and end dates
       resultData = yf.download(string, startDate, endDate)
-      fig = px.line(resultData, x=resultData.index, y='Close', title=ticker+ ' Over Time')
-      st.write(fig)
+      # resultData = pd.read_csv(debug+string+'_price.csv')
+      # resultData = resultData.set_index('Date')
+
+      if compare:
+
+        # importing the yfinance package
+        import yfinance as yf
+
+        # giving the start and end dates
+        startDate = '2022-10-29'
+        endDate = datetime.now().strftime(format='%Y-%m-%d')
+
+        # downloading the data of the ticker value between
+        # the start and end dates
+        resultData2 = yf.download('%5EGSPC', startDate, endDate)
+        # resultData2 = pd.read_csv(debug+'S&P500_price.csv')
+        # resultData2 = resultData2.set_index('Date')
+
+        rebase = pd.concat([resultData.rename(columns={'Close':string}),resultData2.rename(columns={'Close':'S&P500'})], axis=1)
+        rebase = (rebase / rebase.iloc[0]) * 100 -100
+        fig = px.line(rebase, x=rebase.index, y=[string, 'S&P500'], title=string+ ' against S&P500', labels={'value': 'Cumulative Return (%)'})
+        st.write(fig)
+      else:
+
+        fig = px.line(resultData, x=resultData.index, y='Close', title=ticker+ ' Over Time',
+                      labels={'Close': 'Stock Price (USD)'})
+        st.write(fig)
 
