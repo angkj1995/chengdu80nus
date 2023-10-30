@@ -39,13 +39,20 @@ ticker = st.selectbox(label='', options=['Apple Inc. (AAPL)','Microsoft Corporat
 if not (ticker is None):
     #String cleaning and read news
     string = ticker[-5:-1]
-    news = pd.read_csv(debug+string+'_news_yahoo.csv')
+    news = pd.read_csv(debug+string+'_news_yahoo_sent.csv')
     # news = pd.read_csv('data/'+string+'_news_yahoo.csv')
-    news = news.drop(news.columns[0], axis=1).iloc[:,[4,0,1,3,2]]
+    news = news.drop(news.columns[0], axis=1).loc[:,['date','sentiment','title','desc','source','url']]
 
     #Output news
     with st.expander("Recent company news"):
-      st.dataframe(news)
+      #Function to colour columns
+      def colorful_sentiment(value):
+        return f"background-color: pink;" if value in ["negative"] else f"background-color: lightgreen;" if value in ["positive"] else None
+      st.dataframe(news.style.applymap(colorful_sentiment), 
+                   #Column link to URL
+                   column_config={"url": st.column_config.LinkColumn()},
+                   use_container_width =True)
+ 
 
     #Download news
     st.download_button("Press to Download",
@@ -74,7 +81,7 @@ if not (ticker is None):
 
       if compare:
 
-        # importing the yfinance package
+        importing the yfinance package
         import yfinance as yf
 
         # giving the start and end dates
