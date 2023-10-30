@@ -54,19 +54,21 @@ if not (ticker is None):
                    use_container_width =True)
  
 
-    #Download news
-    st.download_button("Press to Download",
-    news.to_csv(),
-    "file.csv",
-    "text/csv",
-    key='download-csv')
-
-    col1, col2 = st.columns(2)
-    with col1:
+    cola, colb = st.columns(2)
+    with cola:
+      #Download news
+      st.download_button("Press to Download",
+      news.to_csv(),
+      "file.csv",
+      "text/csv",
+      key='download-csv')
+    with colb:
       #Want to compare to s&p?
       compare = st.checkbox(label='Compare to S&P500')
 
-      # importing the yfinance package
+    col1, col2 = st.columns(2)
+    with col1:
+      # # importing the yfinance package
       import yfinance as yf
 
       # giving the start and end dates
