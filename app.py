@@ -81,7 +81,7 @@ if not (ticker is None):
 
       if compare:
 
-        importing the yfinance package
+        #importing the yfinance package
         import yfinance as yf
 
         # giving the start and end dates
