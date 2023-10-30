@@ -18,7 +18,7 @@ import yfinance as yf
 from datetime import datetime
 
 
-debug = 'C:/users/kj/Desktop/chengdu80-nus/data/'
+debug = 'data/'
 
 #Title home page
 st.title('Welcome to NUS Finovators Demo! 👋')
