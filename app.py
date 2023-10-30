@@ -17,7 +17,7 @@ import plotly.express as px
 import yfinance as yf
 from datetime import datetime
 
-
+st.set_page_config(layout="wide")
 debug = 'data/'
 
 #Title home page
