@@ -89,7 +89,7 @@ if not (ticker is None):
 
         rebase = pd.concat([resultData.rename(columns={'Close':string}),resultData2.rename(columns={'Close':'S&P500'})], axis=1)
         rebase = (rebase / rebase.iloc[0]) * 100 -100
-        fig = px.line(rebase, x=rebase.index, y=[string, 'S&P500'], title=string+ ' against S&P500', labels={'value': 'Cumulative Return (%)'})
+        fig = px.line(rebase, x=rebase.index, y=[string, 'S&P500'], title=ticker+ ' against S&P500', labels={'value': 'Cumulative Return (%)'})
         st.write(fig)
       else:
 
