@@ -81,7 +81,7 @@ if not (ticker is None):
 
       if compare:
 
-        #importing the yfinance package
+        # importing the yfinance package
         import yfinance as yf
 
         # giving the start and end dates
@@ -103,4 +103,20 @@ if not (ticker is None):
         fig = px.line(resultData, x=resultData.index, y='Close', title=ticker+ ' Over Time',
                       labels={'Close': 'Stock Price (USD)'})
         st.write(fig)
+    
+    with col2:
+      #Define function that maps sentiments to numerics
+      def mapsent(x):
+          return 1 if x=='positive' else -1 if x=='negative' else 0 
+
+      news['sentiment_val'] = news['sentiment'].apply(mapsent)
+      senti_line = news.groupby('date')['sentiment_val'].agg(lambda x: x.sum()/x.count())
+
+      fig2 = px.line(senti_line, x=senti_line.index, y=['sentiment_val'], title='News Sentiment of '+string, 
+      labels={'date': 'Date', 'value': 'Sentiment'})
+
+      fig2.add_shape(type='line', x0=senti_line.index.min(), x1=senti_line.index.max(),
+          y0=0, y1=0, line=dict(color='black', width=1, dash='dash') )
+
+      st.write(fig2)
 
