@@ -26,7 +26,7 @@ import streamlit.components.v1 as components
 # Set Streamlit page configuration to a wide layout
 st.set_page_config(layout="wide")
 # Define a path for reading data
-debug = 'C:/users/kj/Desktop/chengdu80-nus/data/'
+debug = 'data/'
 
 
 st.image(debug+'NUSight.png')
