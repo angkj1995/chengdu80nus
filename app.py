@@ -29,15 +29,13 @@ st.set_page_config(layout="wide")
 debug = 'data/'
 
 
-st.image(debug+'NUSight.png')
 # Title and introductory text for the home page
-st.title("""NUSights 👁""")
 
 # Header and subheader for the "Company Specific Analysis" section
-st.header('Company Specific Analysis')
-st.subheader('Select the company you want to investigate')
+st.title('Company Specific Analysis')
+st.header('Select the company you want to investigate')
 # Dropdown selector for choosing a company
-ticker = st.selectbox(label='', options=['Apple Inc. (AAPL)','Microsoft Corporation (MSFT)','NVIDIA Corporation (NVDA)'], index=None, placeholder='Select Stock...') 
+ticker = st.selectbox(label='', options=['Apple Inc. (AAPL)','Microsoft Corporation (MSFT)','NVIDIA Corporation (NVDA)'], placeholder='Select Stock...') 
 
  
 if not (ticker is None):
@@ -45,12 +43,14 @@ if not (ticker is None):
     string = ticker[-5:-1]
     # Read news data from a CSV file
     news = pd.read_csv(debug+string+'_news_yahoo_sent.csv')
+    news['date'] = pd.to_datetime(news['date'], format="%Y-%m-%d")
     # news = pd.read_csv('data/'+string+'_news_yahoo.csv')
     news = news.drop(news.columns[0], axis=1).loc[:,['date','sentiment','title','desc','source','url']]
 
-    st.subheader('Company News')
+    st.divider()
+    st.header('Company News')
     # Display the recent company news in an expander
-    with st.expander("Full company news"):
+    with st.expander("View all company news from past week"):
       # Function to color code sentiment in the dataframe
       def colorful_sentiment(value):
         return f"background-color: pink;" if value in ["negative"] else f"background-color: lightgreen;" if value in ["positive"] else None
@@ -58,6 +58,7 @@ if not (ticker is None):
                    #Column link to URL
                    column_config={"url": st.column_config.LinkColumn()},
                    use_container_width =True)
+    st.text(str(news.shape[0])+' news found... Sentiments computed!')
     st.download_button("Download all recent company news",
     news.to_csv(),
     "file.csv",
@@ -67,9 +68,10 @@ if not (ticker is None):
     cola, colx = st.columns(2)
     with cola:  
       #Company summary
-      st.write("**Summary of key recent company news**")
+      st.subheader("**Summary of key recent company news**")
+      st.write((str(news.shape[0])+' news articles summarised with Prompt Engineering and LLM'))
     with colx:
-      more = st.number_input('Adjust number of words in summary', value=50)
+      more = st.selectbox('Adjust number of words in summary', options=[50,200])
     # coy_summary = json.load(open(debug+string+'_summary.json'))
     # st.text(coy_summary['text'])
     coy_summary = pd.read_csv(debug+string+'_summary_dataframe.csv')
@@ -79,7 +81,8 @@ if not (ticker is None):
       st.text(coy_summary.iloc[1]['0'])
 
 
-    st.subheader('Stock Price and Sentiments')
+    st.divider()
+    st.header('Stock Price and Sentiments')
     compare = st.checkbox(label='Compare Price to S&P500')
     # # Create two columns for UI layout
     # colz, colb = st.columns(2)
@@ -98,32 +101,32 @@ if not (ticker is None):
     # Create two columns for plotting data
     col1, col2 = st.columns(2)
     with col1:
-      # importing the yfinance package
-      import yfinance as yf
+      # # importing the yfinance package
+      # import yfinance as yf
 
-      # giving the start and end dates
-      startDate = '2022-10-29'
-      endDate = datetime.now().strftime(format='%Y-%m-%d')
+      # # giving the start and end dates
+      # startDate = '2022-10-29'
+      # endDate = datetime.now().strftime(format='%Y-%m-%d')
 
-      # downloading the data of the ticker value between
-      # the start and end dates
-      resultData = yf.download(string, startDate, endDate)
-      # resultData = pd.read_csv(debug+string+'_price.csv')
-      # resultData = resultData.set_index('Date')
+      # # downloading the data of the ticker value between
+      # # the start and end dates
+      # resultData = yf.download(string, startDate, endDate)
+      resultData = pd.read_csv(debug+string+'_price.csv')
+      resultData = resultData.set_index('Date')
 
       if compare:
-        # importing the yfinance package
-        import yfinance as yf
+        # # importing the yfinance package
+        # import yfinance as yf
 
-        # giving the start and end dates
-        startDate = '2022-10-29'
-        endDate = datetime.now().strftime(format='%Y-%m-%d')
+        # # giving the start and end dates
+        # startDate = '2022-10-29'
+        # endDate = datetime.now().strftime(format='%Y-%m-%d')
 
-        # downloading the data of the ticker value between
-        # the start and end dates
-        resultData2 = yf.download('%5EGSPC', startDate, endDate)
-        # resultData2 = pd.read_csv(debug+'S&P500_price.csv')
-        # resultData2 = resultData2.set_index('Date')
+        # # downloading the data of the ticker value between
+        # # the start and end dates
+        # resultData2 = yf.download('%5EGSPC', startDate, endDate)
+        resultData2 = pd.read_csv(debug+'S&P500_price.csv')
+        resultData2 = resultData2.set_index('Date')
 
         # Normalize and compare stock and S&P500 data
         rebase = pd.concat([resultData.rename(columns={'Close':string}),resultData2.rename(columns={'Close':'S&P500'})], axis=1)
@@ -161,8 +164,9 @@ if not (ticker is None):
       st.plotly_chart(fig2,use_container_width=True)
 
 
-    st.subheader("Multi-angle Analysis")
-    st.write('**Varying viewpoints of news articles about the company are summarised**')
+    st.divider()
+    st.header("Multi-angle Analysis")
+    st.text("""Computing news perspective clusters using K-means... Computed! \nSummarising news clusters with Prompt Engineering and LLM... Summarised!""")
     mult = pd.read_csv(debug+string+'_multi_angle.csv')
     # for i in range(mult.shape[0]):
     #   st.write(mult.iloc[i,1])
@@ -174,7 +178,8 @@ if not (ticker is None):
         i=i+1
 
 
-    st.subheader("News Impact Analysis")
+    st.divider()
+    st.header("News Impact Analysis")
     # Create two columns for plotting data
     col3, col4 = st.columns(2)
 
@@ -197,8 +202,8 @@ if not (ticker is None):
 
 
 
-
-    st.subheader("News Development Tracing")
+    st.divider()
+    st.header("News Development Tracing")
     col5, col6 = st.columns(2)
 
     with col5:
@@ -255,22 +260,24 @@ if not (ticker is None):
     with col6:
       title = final_results_df['title'].unique()[0]
       desc = final_results_df['original_desc'].unique()[0]
-      st.write('**Find out how the event in this news is developing over time**')
+      st.subheader('**Find out how events in this news develop over time**')
       st.write("**Headline:** "+title + "\n\n" + "**Preview:** "+desc)
 
 
 
 
-
-    st.subheader("**Value Chain Analysis**")
+    st.divider()
+    st.header("**Value Chain Analysis**")
     # st.write("""Firms frequently mentioned alongside """+ticker+""" in news articles are extracted and plotted 
     # to show the tight-knit relationship with """+ticker+""". Large nodes indicate a higher co-occurance in news articles""")
-    st.write("""These firms frequently co-occur in news articles with """ + ticker + """ and are either """ + ticker + """'s key
-    partners or key competitors""")
+    st.text("""Extracting companies using Named Entity Recognition... Extracted! \nPlotting network of co-occuerence... Plotted!""")
+    st.write("""These companies frequently co-occur in news articles with **""" + ticker + """**. Larger nodes indicate higher co-occurence""")
+    st.markdown('''- **:red[Red Nodes]**: These companies are appear in **:red[Negative Sentiment News]** together with ''' + ticker)
+    st.markdown("- **:green[Green Nodes]**: These companies are appear in **:green[Positive Sentiment News]** together with " + ticker)
 
     # HtmlFile = open(debug+"net.html", 'r', encoding='utf-8')
     # source_code = HtmlFile.read() 
     # components.html(source_code)
 
     p = open(debug+string+"_net.html")
-    components.html(p.read(), height=400, width=1000)
+    components.html(p.read(), height=500, width=1000)
