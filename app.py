@@ -42,7 +42,7 @@ if not (ticker is None):
     # Extract the stock ticker from the selected company
     string = ticker[-5:-1]
     # Read news data from a CSV file
-    @st.cache
+    @st.cache_resource
     def fetch_news():
       news = pd.read_csv(debug+string+'_news_yahoo_sent.csv')
       return news
@@ -79,7 +79,7 @@ if not (ticker is None):
     # coy_summary = json.load(open(debug+string+'_summary.json'))
     # st.text(coy_summary['text'])
 
-    @st.cache
+    @st.cache_resource
     def fetch_summary():
       coy_summary = pd.read_csv(debug+string+'_summary_dataframe.csv')
       return coy_summary
@@ -196,7 +196,7 @@ if not (ticker is None):
       st.markdown("What is the impact of recent **:red[Negative News]** 😡 on "+ticker+"?")
       # st.write('What is the impact of **Negative News** on '+ticker+"?")
 
-      @st.cache
+      @st.cache_resource
       def fetch_neg():
         neg_impact = pd.read_json((debug+string+'_negative_impact.json'))
         return neg_impact
@@ -209,7 +209,7 @@ if not (ticker is None):
       st.markdown("What is the impact of recent **:green[Positive News]** 🤗 on "+ticker+"?")
       # st.write('What is the impact of **Negative News** on '+ticker+"?")
 
-      @st.cache
+      @st.cache_resource
       def fetch_pos():
         pos_impact = pd.read_json((debug+string+'_positive_impact.json'))
         return pos_impact
