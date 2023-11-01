@@ -42,11 +42,7 @@ if not (ticker is None):
     # Extract the stock ticker from the selected company
     string = ticker[-5:-1]
     # Read news data from a CSV file
-    @st.cache_resource
-    def fetch_news():
-      news = pd.read_csv(debug+string+'_news_yahoo_sent.csv')
-      return news
-    news = fetch_news()
+    news = pd.read_csv(debug+string+'_news_yahoo_sent.csv')
     news['date'] = pd.to_datetime(news['date'], format="%Y-%m-%d")
     # news = pd.read_csv('data/'+string+'_news_yahoo.csv')
     news = news.drop(news.columns[0], axis=1).loc[:,['date','sentiment','title','desc','source','url']]
@@ -78,12 +74,7 @@ if not (ticker is None):
       more = st.selectbox('Adjust number of words in summary', options=[50,200])
     # coy_summary = json.load(open(debug+string+'_summary.json'))
     # st.text(coy_summary['text'])
-
-    @st.cache_resource
-    def fetch_summary():
-      coy_summary = pd.read_csv(debug+string+'_summary_dataframe.csv')
-      return coy_summary
-    coy_summary = fetch_summary()
+    coy_summary = pd.read_csv(debug+string+'_summary_dataframe.csv')
     if more==50:
       st.text(coy_summary.iloc[0]['0'])
     else:
@@ -195,12 +186,7 @@ if not (ticker is None):
     with col3:
       st.markdown("What is the impact of recent **:red[Negative News]** 😡 on "+ticker+"?")
       # st.write('What is the impact of **Negative News** on '+ticker+"?")
-
-      @st.cache_resource
-      def fetch_neg():
-        neg_impact = pd.read_json((debug+string+'_negative_impact.json'))
-        return neg_impact
-      neg_impact = fetch_neg()
+      neg_impact = pd.read_json((debug+string+'_negative_impact.json'))
       neg_news = st.selectbox(label='', options=neg_impact['negative_title'], index=None, placeholder='Select Negative News...')
       if neg_news is not None:
         st.write(neg_impact[neg_impact['negative_title']==neg_news].iloc[0,2])
@@ -208,12 +194,7 @@ if not (ticker is None):
     with col4:
       st.markdown("What is the impact of recent **:green[Positive News]** 🤗 on "+ticker+"?")
       # st.write('What is the impact of **Negative News** on '+ticker+"?")
-
-      @st.cache_resource
-      def fetch_pos():
-        pos_impact = pd.read_json((debug+string+'_positive_impact.json'))
-        return pos_impact
-      pos_impact = fetch_pos()
+      pos_impact = pd.read_json((debug+string+'_positive_impact.json'))
       pos_news = st.selectbox(label='', options=pos_impact['positive_title'], index=None, placeholder='Select Positive News...')
       if pos_news is not None:
         st.write(pos_impact[pos_impact['positive_title']==pos_news].iloc[0,2])      
