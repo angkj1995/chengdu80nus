@@ -101,32 +101,32 @@ if not (ticker is None):
     # Create two columns for plotting data
     col1, col2 = st.columns(2)
     with col1:
-      # # importing the yfinance package
-      # import yfinance as yf
+      # importing the yfinance package
+      import yfinance as yf
 
-      # # giving the start and end dates
-      # startDate = '2022-10-29'
-      # endDate = datetime.now().strftime(format='%Y-%m-%d')
+      # giving the start and end dates
+      startDate = '2022-10-29'
+      endDate = datetime.now().strftime(format='%Y-%m-%d')
 
-      # # downloading the data of the ticker value between
-      # # the start and end dates
-      # resultData = yf.download(string, startDate, endDate)
-      resultData = pd.read_csv(debug+string+'_price.csv')
-      resultData = resultData.set_index('Date')
+      # downloading the data of the ticker value between
+      # the start and end dates
+      resultData = yf.download(string, startDate, endDate)
+      # resultData = pd.read_csv(debug+string+'_price.csv')
+      # resultData = resultData.set_index('Date')
 
       if compare:
-        # # importing the yfinance package
-        # import yfinance as yf
+        # importing the yfinance package
+        import yfinance as yf
 
-        # # giving the start and end dates
-        # startDate = '2022-10-29'
-        # endDate = datetime.now().strftime(format='%Y-%m-%d')
+        # giving the start and end dates
+        startDate = '2022-10-29'
+        endDate = datetime.now().strftime(format='%Y-%m-%d')
 
-        # # downloading the data of the ticker value between
-        # # the start and end dates
-        # resultData2 = yf.download('%5EGSPC', startDate, endDate)
-        resultData2 = pd.read_csv(debug+'S&P500_price.csv')
-        resultData2 = resultData2.set_index('Date')
+        # downloading the data of the ticker value between
+        # the start and end dates
+        resultData2 = yf.download('%5EGSPC', startDate, endDate)
+        # resultData2 = pd.read_csv(debug+'S&P500_price.csv')
+        # resultData2 = resultData2.set_index('Date')
 
         # Normalize and compare stock and S&P500 data
         rebase = pd.concat([resultData.rename(columns={'Close':string}),resultData2.rename(columns={'Close':'S&P500'})], axis=1)
